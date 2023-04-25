@@ -22,7 +22,8 @@ public static class Services
     {
         services.AddTransient(typeof(Lazy<>), typeof(LazyInstance<>));
 
-        services.AddSingleton(typeof(IMessenger), GetMessenger());
+        services.AddSingleton(typeof(IMessenger), WeakReferenceMessenger.Default);
+        services.AddSingleton(typeof(StrongReferenceMessenger), StrongReferenceMessenger.Default);
         
         services.AddSingleton<IDecamelizer, Decamelizer>();
         services.AddSingleton<IGetScriptsService, GetScriptsService>();
@@ -164,6 +165,7 @@ public static class Services
         services.AddSingleton<BoostsViewModel>();
         services.AddSingleton<ScriptStatsViewModel>();
         services.AddSingleton<RuntimeHelpersViewModel>();
+        services.AddSingleton<NotifyDropViewModel>();
         services.AddSingleton<ToPickupDropsViewModel>();
         services.AddSingleton<RegisteredQuestsViewModel>();
         services.AddSingleton<CurrentDropsViewModel>();
@@ -210,11 +212,6 @@ public static class Services
         services.AddSingleton(SkuaManager.CreateOptionsViewModel);
 
         return services;
-    }
-
-    private static WeakReferenceMessenger GetMessenger()
-    {
-        return WeakReferenceMessenger.Default;
     }
 
     private static Compiler CreateCompiler(IServiceProvider s)
